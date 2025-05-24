@@ -1,1 +1,27 @@
-{ }
+{
+  "preset": "jest-expo",
+  "testRunner": "jest-circus/runner",
+  "runnerConfig": "./config.json",
+  "specs": "./*.e2e.js",
+  "behavior": {
+    "init": {
+      "installApp": true
+    },
+    "cleanup": {
+      "shutdownDevice": true
+    }
+  },
+  "apps": {
+    "ios.sim.debug": {
+      "type": "ios.app",
+      "binaryPath": "ios/build/Build/Products/Debug-iphonesimulator/Twogether.app",
+      "build": "xcodebuild -workspace ios/Twogether.xcworkspace -scheme Twogether -configuration Debug -sdk iphonesimulator -derivedDataPath ios/build"
+    },
+    "android.emu.debug": {
+      "type": "android.apk",
+      "binaryPath": "android/app/build/outputs/apk/debug/app-debug.apk",
+      "build": "cd android && ./gradlew assembleDebug assembleAndroidTest -DtestBuildType=debug && cd ..",
+      "device": { "avdName": "Pixel_3_API_30" }
+    }
+  }
+}

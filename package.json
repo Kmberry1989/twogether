@@ -1,4 +1,11 @@
 {
   "name": "twogether-app",
   "version": "1.0.0"
+  "scripts": {
+  // ... existing scripts
+  "detox:build:ios": "detox build --configuration ios.sim.debug",
+  "detox:build:android": "detox build --configuration android.emu.debug",
+  "detox:test:ios": "detox test --configuration ios.sim.debug",
+  "detox:test:android": "detox test --configuration android.emu.debug"
+}
 }
