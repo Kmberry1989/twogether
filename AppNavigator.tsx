@@ -1,0 +1,1 @@
+// AppNavigator with stack and tabs
