@@ -1,17 +1,27 @@
-import axios from 'axios';
-axios.defaults.baseURL = 'http://10.0.0.34:4000';
+// AuthContext.tsx
+
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 
-const API_URL = 'https://api.twogether.app/v1';
+// Base URL pointing at your Express server
+const API_URL = 'http://10.0.0.34:4000';
 
-interface PartnerPayload { name: string; avatarUrl?: string }
+interface PartnerPayload {
+  name: string;
+  avatarUrl?: string;
+}
+
 interface AuthContextType {
   token: string | null;
   coupleId: string | null;
   isLoading: boolean;
-  signup: (email: string, password: string, partnerA: PartnerPayload, partnerB: PartnerPayload) => Promise<void>;
+  signup: (
+    email: string,
+    password: string,
+    partnerA: PartnerPayload,
+    partnerB: PartnerPayload
+  ) => Promise<void>;
   login: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
 }
@@ -21,27 +31,44 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [token, setToken] = useState<string | null>(null);
   const [coupleId, setCoupleId] = useState<string | null>(null);
-  const [isLoading, setLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const loadAuth = async () => {
-      const storedToken = await AsyncStorage.getItem('token');
-      const storedCoupleId = await AsyncStorage.getItem('coupleId');
-      if (storedToken && storedCoupleId) {
-        setToken(storedToken);
-        setCoupleId(storedCoupleId);
-        axios.defaults.headers.common['Authorization'] = `Bearer ${storedToken}`;
+      try {
+        const storedToken = await AsyncStorage.getItem('token');
+        const storedId = await AsyncStorage.getItem('coupleId');
+        if (storedToken && storedId) {
+          setToken(storedToken);
+          setCoupleId(storedId);
+          axios.defaults.baseURL = API_URL;
+          axios.defaults.headers.common['Authorization'] = `Bearer ${storedToken}`;
+        }
+      } catch (e) {
+        console.warn('Failed to load auth from storage', e);
+      } finally {
+        setIsLoading(false);
       }
-      setLoading(false);
     };
     loadAuth();
   }, []);
 
-  const signup = async (email: string, password: string, partnerA: PartnerPayload, partnerB: PartnerPayload) => {
-    const resp = await axios.post(`${API_URL}/auth/signup`, { email, password, partnerA, partnerB });
+  const signup = async (
+    email: string,
+    password: string,
+    partnerA: PartnerPayload,
+    partnerB: PartnerPayload
+  ) => {
+    const resp = await axios.post(`${API_URL}/auth/signup`, {
+      email,
+      password,
+      partnerA,
+      partnerB,
+    });
     const { token: jwt, coupleId: id } = resp.data;
     await AsyncStorage.setItem('token', jwt);
     await AsyncStorage.setItem('coupleId', id);
+    axios.defaults.baseURL = API_URL;
     axios.defaults.headers.common['Authorization'] = `Bearer ${jwt}`;
     setToken(jwt);
     setCoupleId(id);
@@ -52,6 +79,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const { token: jwt, coupleId: id } = resp.data;
     await AsyncStorage.setItem('token', jwt);
     await AsyncStorage.setItem('coupleId', id);
+    axios.defaults.baseURL = API_URL;
     axios.defaults.headers.common['Authorization'] = `Bearer ${jwt}`;
     setToken(jwt);
     setCoupleId(id);
@@ -73,7 +101,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 };
 
 export const useAuth = (): AuthContextType => {
-  const context = useContext(AuthContext);
-  if (!context) throw new Error('useAuth must be used within AuthProvider');
-  return context;
+  const ctx = useContext(AuthContext);
+  if (!ctx) {
+    throw new Error('useAuth must be used within an AuthProvider');
+  }
+  return ctx;
 };
