@@ -1,11 +1,52 @@
 {
-  "name": "twogether-app",
-  "version": "1.0.0"
-  "scripts": {
-  // ... existing scripts
-  "detox:build:ios": "detox build --configuration ios.sim.debug",
-  "detox:build:android": "detox build --configuration android.emu.debug",
-  "detox:test:ios": "detox test --configuration ios.sim.debug",
-  "detox:test:android": "detox test --configuration android.emu.debug"
+"name": "twogether-app",
+"version": "1.0.0",
+"main": "App.tsx",
+"scripts": {
+ "start": "expo start",
+ "android": "expo run:android",
+ "ios": "expo run:ios",
+ "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+ "test": "jest",
+ "detox:build:ios": "detox build --configuration ios.sim.debug",
+ "detox:build:android": "detox build --configuration android.emu.debug",
+ "detox:test:ios": "detox test --configuration ios.sim.debug",
+ "detox:test:android": "detox test --configuration android.emu.debug"
+},
+"dependencies": {
+ "@react-native-async-storage/async-storage": "*",
+ "axios": "*",
+ "expo": "*",
+ "expo-av": "*",
+ "expo-camera": "*",
+ "expo-image-picker": "*",
+ "expo-notifications": "*",
+ "@react-navigation/native": "*",
+ "@react-navigation/stack": "*",
+ "@react-navigation/bottom-tabs": "*",
+ "react-native-gesture-handler": "*",
+ "react-native-reanimated": "*",
+ "react-native-safe-area-context": "*",
+ "react-native-screens": "*",
+ "react-native-sketch-canvas": "*",
+ "lucide-react-native": "*"
+},
+"devDependencies": {
+ "@babel/core": "*",
+ "@babel/runtime": "*",
+ "@testing-library/jest-native": "*",
+ "@testing-library/react-native": "*",
+ "@types/jest": "*",
+ "@types/react": "*",
+ "@types/react-native": "*",
+ "babel-jest": "*",
+ "detox": "*",
+ "detox-cli": "*",
+ "eslint": "*",
+ "eslint-config-prettier": "*",
+ "jest": "*",
+ "jest-circus": "*",
+ "typescript": "*",
+ "prettier": "*"
 }
 }

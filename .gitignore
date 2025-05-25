@@ -1,1 +1,8 @@
 node_modules/
+ios/build/
+android/app/build/
+uploads/
+coverage/
+.expo/
+npm-debug.log
+yarn-error.log
