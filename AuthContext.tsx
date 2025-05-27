@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
-const API_URL = 'http://10.0.0.34:4000';
+const API_URL = 'http://localhost:4000';
 interface PartnerPayload { name: string; avatarUrl?: string }
 interface AuthContextType {
 token: string | null;
