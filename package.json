@@ -14,24 +14,24 @@
     "detox:test:android": "detox test --configuration android.emu.debug"
   },
   "dependencies": {
+    "@expo/metro-runtime": "~5.0.4",
     "@react-native-async-storage/async-storage": "*",
+    "@react-navigation/bottom-tabs": "*",
+    "@react-navigation/native": "*",
+    "@react-navigation/stack": "*",
     "axios": "*",
     "expo": "*",
     "expo-av": "*",
     "expo-camera": "*",
     "expo-image-picker": "*",
     "expo-notifications": "*",
-    "@react-navigation/native": "*",
-    "@react-navigation/stack": "*",
-    "@react-navigation/bottom-tabs": "*",
+    "lucide-react-native": "*",
+    "react-dom": "19.0.0",
     "react-native-gesture-handler": "*",
     "react-native-reanimated": "*",
     "react-native-safe-area-context": "*",
     "react-native-screens": "*",
-    "lucide-react-native": "*",
-    "react-dom": "19.0.0",
-    "react-native-web": "^0.20.0",
-    "@expo/metro-runtime": "~5.0.4"
+    "react-native-web": "^0.20.0"
   },
   "devDependencies": {
     "@babel/core": "*",
@@ -48,7 +48,11 @@
     "eslint-config-prettier": "*",
     "jest": "*",
     "jest-circus": "*",
-    "typescript": "*",
-    "prettier": "*"
+    "metro": "^0.82.4",
+    "metro-config": "^0.82.4",
+    "metro-core": "^0.82.4",
+    "metro-react-native-babel-transformer": "^0.77.0",
+    "prettier": "*",
+    "typescript": "*"
   }
 }
