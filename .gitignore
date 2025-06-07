@@ -6,3 +6,5 @@ coverage/
 .expo/
 npm-debug.log
 yarn-error.log
+
+.vercel

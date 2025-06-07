@@ -6,6 +6,16 @@ const multer = require('multer');
 const path = require('path');
 
 const app = express();
+
+// Set Content Security Policy to allow fonts
+app.use((req, res, next) => {
+  res.setHeader(
+    "Content-Security-Policy",
+    "default-src 'self'; font-src 'self' data: https:;"
+  );
+  next();
+});
+
 const JWT_SECRET = process.env.JWT_SECRET || 'supersecretkey';
 
 // Configure multer for file uploads
