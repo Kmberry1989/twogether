@@ -1,7 +1,7 @@
 // ActivityScreen.tsx
 
 import React, { useEffect, useState } from 'react';
-import { View, Text, Button, ActivityIndicator, StyleSheet } from 'react-native';
+import { View, Text, Button, ActivityIndicator, StyleSheet, Alert } from 'react-native';
 import axios from 'axios';
 import { useAuth } from './AuthContext';
 import { useGlobal } from './GlobalContext';
@@ -18,19 +18,29 @@ interface Activity {
   startingTurn: 'A' | 'B';
 }
 
+// Set your API base URL for local dev or production
+const API_BASE_URL = process.env.NODE_ENV === 'development'
+  ? 'http://localhost:4000'
+  : '';
+
 export default function ActivityScreen({ navigation }: any) {
   const { token } = useAuth();
   const { addSession } = useGlobal();
   const [activity, setActivity] = useState<Activity | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchActivity = async () => {
       try {
-        // token & baseURL already configured in AuthContext
-        const resp = await axios.get<Activity>('/activity/today');
+        const resp = await axios.get<Activity>(
+          API_BASE_URL + '/activity/today',
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
         setActivity(resp.data);
+        setError(null);
       } catch (err) {
+        setError('Failed to fetch activity.');
         console.error('Failed to fetch activity:', err);
       } finally {
         setLoading(false);
@@ -47,6 +57,34 @@ export default function ActivityScreen({ navigation }: any) {
     );
   }
 
+  if (error) {
+    return (
+      <View style={styles.center}>
+        <Text style={{ color: 'red' }}>{error}</Text>
+        <Button title="Retry" onPress={() => {
+          setLoading(true);
+          setError(null);
+          setActivity(null);
+          // re-run effect
+          (async () => {
+            try {
+              const resp = await axios.get<Activity>(
+                API_BASE_URL + '/activity/today',
+                { headers: { Authorization: `Bearer ${token}` } }
+              );
+              setActivity(resp.data);
+              setError(null);
+            } catch (err) {
+              setError('Failed to fetch activity.');
+            } finally {
+              setLoading(false);
+            }
+          })();
+        }} />
+      </View>
+    );
+  }
+
   if (!activity) {
     return (
       <View style={styles.center}>
@@ -57,11 +95,15 @@ export default function ActivityScreen({ navigation }: any) {
 
   const handleOptionPress = async (option: string) => {
     try {
-      const resp = await axios.post('/sessions', {
-        activityId: activity.activityId,
-        turn: activity.startingTurn,
-        response: option,
-      });
+      const resp = await axios.post(
+        API_BASE_URL + '/sessions',
+        {
+          activityId: activity.activityId,
+          turn: activity.startingTurn,
+          response: option,
+        },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
       addSession({
         sessionId: resp.data.sessionId,
         activityId: activity.activityId,
@@ -72,6 +114,7 @@ export default function ActivityScreen({ navigation }: any) {
       });
       navigation.navigate('Home');
     } catch (err) {
+      Alert.alert('Error', 'Failed to submit session.');
       console.error('Failed to submit session:', err);
     }
   };
