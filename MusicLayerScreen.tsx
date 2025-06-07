@@ -1,39 +1,4 @@
-import React from 'react';
-import { AuthProvider } from './AuthContext';
-import { GlobalProvider } from './GlobalContext';
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
-import OnboardingScreen from './OnboardingScreen';
-import HomeScreen from './HomeScreen';
-import ActivityScreen from './ActivityScreen';
-import PictionaryScreen from './PictionaryScreen';
-import MusicLayerScreen from './MusicLayerScreen';
-import JourneyScreen from './JourneyScreen';
-
-const Stack = createStackNavigator();
-
-export default function App() {
-  return (
-    <AuthProvider>
-      <GlobalProvider>
-        <NavigationContainer>
-          <Stack.Navigator initialRouteName="Onboarding">
-            <Stack.Screen
-              name="Onboarding"
-              component={OnboardingScreen}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen name="Home" component={HomeScreen} />
-            <Stack.Screen name="Activity" component={ActivityScreen} />
-            <Stack.Screen name="Pictionary" component={PictionaryScreen} />
-            <Stack.Screen name="MusicLayer" component={MusicLayerScreen} />
-            <Stack.Screen name="Journey" component={JourneyScreen} />
-          </Stack.Navigator>
-        </NavigationContainer>
-      </GlobalProvider>
-    </AuthProvider>
-  );
-}, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { SafeAreaView, View, Text, Button, ActivityIndicator, Alert, StyleSheet } from 'react-native';
 import { Audio } from 'expo-av';
 import axios from 'axios';
@@ -106,7 +71,6 @@ export default function MusicLayerScreen() {
     setLoading(true);
     try {
       const mediaUrls: string[] = [];
-      // upload both files sequentially
       for (const uri of [baseUri, layerUri]) {
         const form = new FormData();
         form.append('file', { uri, name: uri.split('/').pop(), type: 'audio/m4a' } as any);
@@ -117,7 +81,7 @@ export default function MusicLayerScreen() {
         activityId: session.activityId,
         turn: session.turn,
         response: {},
-        mediaUrls
+        mediaUrls,
       });
       const { sessionId, timestamp } = respSession.data;
       setSession({ sessionId, activityId: session.activityId, turn: session.turn, data: {}, timestamp });
@@ -130,7 +94,11 @@ export default function MusicLayerScreen() {
   };
 
   if (loading) {
-    return <SafeAreaView style={styles.center}><ActivityIndicator size="large"/></SafeAreaView>;
+    return (
+      <SafeAreaView style={styles.center}>
+        <ActivityIndicator size="large" />
+      </SafeAreaView>
+    );
   }
 
   return (

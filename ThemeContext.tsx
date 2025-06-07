@@ -1,55 +1,43 @@
-import React from 'react';
-import { AuthProvider } from './AuthContext';
-import { GlobalProvider } from './GlobalContext';
-import { ThemeProvider, useTheme } from './ThemeContext';
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
-import OnboardingScreen from './OnboardingScreen';
-import MainTabNavigator from './MainTabNavigator';
-import ActivityScreen from './ActivityScreen';
-import PictionaryScreen from './PictionaryScreen';
-import MusicLayerScreen from './MusicLayerScreen';
-import CharadesScreen from './CharadesScreen';
+import React, { createContext, useContext, useState, ReactNode } from 'react';
 
-const Stack = createStackNavigator();
+export const lightTheme = {
+  colors: {
+    primary: '#6200ee',
+    background: '#FFFFFF',
+    card: '#f2f2f2',
+    text: '#000000',
+    border: '#cccccc',
+  },
+};
 
-function AppNavigator() {
-  const { theme } = useTheme();
-  // Navigation theme matches our color palette
-  const navTheme = {
-    dark: theme.colors.background !== '#FFFFFF',
-    colors: {
-      primary: theme.colors.primary,
-      background: theme.colors.background,
-      card: theme.colors.card,
-      text: theme.colors.text,
-      border: theme.colors.border,
-      notification: theme.colors.primary,
-    },
+export const darkTheme = {
+  colors: {
+    primary: '#bb86fc',
+    background: '#121212',
+    card: '#1e1e1e',
+    text: '#ffffff',
+    border: '#444444',
+  },
+};
+
+interface ThemeContextType {
+  theme: typeof lightTheme;
+  toggleTheme: () => void;
+}
+
+export const ThemeContext = createContext<ThemeContextType>({
+  theme: lightTheme,
+  toggleTheme: () => {},
+});
+
+export const ThemeProvider = ({ children }: { children: ReactNode }) => {
+  const [theme, setTheme] = useState(lightTheme);
+  const toggleTheme = () => {
+    setTheme((prev) => (prev === lightTheme ? darkTheme : lightTheme));
   };
-
   return (
-    <NavigationContainer theme={navTheme}>
-      <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="Onboarding">
-        <Stack.Screen name="Onboarding" component={OnboardingScreen} />
-        <Stack.Screen name="Main" component={MainTabNavigator} />
-        <Stack.Screen name="Activity" component={ActivityScreen} />
-        <Stack.Screen name="Pictionary" component={PictionaryScreen} />
-        <Stack.Screen name="MusicLayer" component={MusicLayerScreen} />
-        <Stack.Screen name="Charades" component={CharadesScreen} />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <ThemeContext.Provider value={{ theme, toggleTheme }}>{children}</ThemeContext.Provider>
   );
-}
+};
 
-export default function App() {
-  return (
-    <AuthProvider>
-      <GlobalProvider>
-        <ThemeProvider>
-          <AppNavigator />
-        </ThemeProvider>
-      </GlobalProvider>
-    </AuthProvider>
-  );
-}
+export const useTheme = () => useContext(ThemeContext);
