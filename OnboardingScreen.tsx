@@ -4,6 +4,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { useNavigation } from '@react-navigation/native';
 import { useAuth } from './AuthContext';
 import { useGlobal } from './GlobalContext';
+import { scheduleDailyReminder } from './NotificationService';
 
 export default function OnboardingScreen() {
   const navigation = useNavigation();
@@ -34,6 +35,8 @@ export default function OnboardingScreen() {
       await signup(email, password, { name: partnerAName, avatarUrl: avatarA }, { name: partnerBName, avatarUrl: avatarB });
       const { coupleId } = await import('./AuthContext').then(mod => mod.useAuth());
       setCouple({ partnerA: { name: partnerAName, avatarUri: avatarA }, partnerB: { name: partnerBName, avatarUri: avatarB }, coupleId });
+      // schedule a daily reminder at 9am local time
+      scheduleDailyReminder(9, 0);
       navigation.replace('Home');
     } catch (e) {
       setError('Signup failed');
