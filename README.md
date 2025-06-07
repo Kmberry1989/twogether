@@ -22,3 +22,17 @@ npm run dev
 4. Tests:
 npm test
 npm run detox:build:ios && npm run detox:test:ios
+
+## Deployment to Vercel
+
+1. Install the Vercel CLI and log in:
+   ```bash
+   npm i -g vercel
+   vercel login
+   ```
+2. Deploy the backend:
+   ```bash
+   vercel --prod
+   ```
+   Vercel reads `vercel.json` and builds the function defined in `api/index.js`.
+   The API will be accessible from the generated Vercel URL.
