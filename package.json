@@ -21,6 +21,7 @@
     "@react-navigation/stack": "*",
     "@vendia/serverless-express": "^4.12.6",
     "axios": "*",
+    "dotenv": "^16.5.0",
     "expo": "*",
     "expo-av": "*",
     "expo-camera": "*",
