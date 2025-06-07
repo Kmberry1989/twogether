@@ -2,9 +2,9 @@
 
 import React, { useEffect, useState } from 'react';
 import { View, Text, Button, ActivityIndicator, StyleSheet, Alert } from 'react-native';
-import axios from 'axios';
 import { useAuth } from './AuthContext';
 import { useGlobal } from './GlobalContext';
+import axios from 'axios';
 
 interface ActivityPayload {
   question: string;
