@@ -3,6 +3,10 @@ root: true,
 extends: ['eslint:recommended', 'plugin:@typescript-eslint/recommended', 'prettier'],
 parser: '@typescript-eslint/parser',
 plugins: ['@typescript-eslint'],
-env: { es2021: true },
+env: {
+  es2021: true,
+  node: true,
+  jest: true,
+},
 rules: {}
 };
