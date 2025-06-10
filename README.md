@@ -15,6 +15,13 @@ cd twogether-app
 2. Frontend:
 npm install
 npm start
+   
+   The app expects an `EXPO_PUBLIC_API_URL` environment variable pointing to your backend.
+   Create a `.env` file with:
+   ```
+   EXPO_PUBLIC_API_URL=http://localhost:4000
+   ```
+   When deployed, set this variable in your Vercel project to the deployed URL.
 3. Backend:
 cd backend
 npm install
