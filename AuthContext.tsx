@@ -1,7 +1,10 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
-const API_URL = 'http://10.0.0.34:4000';
+// Use an environment variable so the backend URL can be configured for
+// development and production. When deploying with Expo, variables prefixed
+// with EXPO_PUBLIC_ are automatically embedded at build time.
+const API_URL = process.env.EXPO_PUBLIC_API_URL || 'http://10.0.0.34:4000';
 interface PartnerPayload { name: string; avatarUrl?: string }
 interface AuthContextType {
 token: string | null;
